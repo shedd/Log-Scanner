@@ -1,0 +1,29 @@
+Log Scanner
+
+A simple utility that I created to scan a bunch of different log files and alert me if any error messages or warnings occurred that I needed to be aware of.  While most systems have their own error detection and alert code built in, we had a bunch of utilities running that needed to be monitored.  So, I ran this script via cron to grep the files and alert my team via email if issues occurred that needed to be attended to.
+
+
+To Dos:
+- Update the script to ignore repeat errors (i.e. if the error is the same as it was on the last run, consider the team alerted and don't spam them)
+
+
+Config:
+At the top of the script, you'll find the variables that need configuration:
+
+//send alert emails to this address
+$alert_email_to = "user@domain.com"; //this is the email you want to be alerted at. setup a mailing list under your Google Apps account to alert your team
+
+//define list of errors to search for
+$errors = array("Warning","Fatal error");//this list is good for PHP errors/warnings
+
+//define list of files to search
+$files = array("errors/log1.log","errors/log2.log"); //comma separated list of files to rep
+
+//folder that holds the log files
+$base_path = "/path/to/files/"; //the folder holding the log files
+
+
+Usage:
+I ran this via cron (using lockrun of course):
+
+*/15 * * * * /usr/bin/lockrun --lockfile=/path/log_alert.lockrun -- sh -c "/usr/bin/php /path/log_alert.php > /path/log_alert.log"
